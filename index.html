@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" id="file-input" />
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script>
+      const $inputEle = document.getElementById("file-input");
+      $inputEle.onchange = function () {
+        const file = this.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+
+          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          console.log(jsonData, "jsonData");
+          // // jsonData 包含了工作表中的数据，以 JSON 格式表示
+          // ```
+
+          // ``jsonData` 是一个数组，其中每个元素代表 xlsx 文件中的一行数据。你可以根据需要进一步处理这些数据。
+        };
+
+        reader.readAsArrayBuffer(file);
+      };
+    </script>
+  </body>
+</html>
